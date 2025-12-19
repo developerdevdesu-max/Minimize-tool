@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MinimalTools App</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* LIGHT THEME VARIABLES */
+:root {
+    --bg: #ffffff;
+    --text: #0a0a0a;
+    --subtle: #6b7280;
+    --line: #e5e7eb;
+    --accent: #2563eb;
+    --accent-soft: #eff6ff;
+    --radius: 18px;
+}
+
+/* DARK THEME OVERRIDES */
+.dark {
+    --bg: #0f172a;
+    --text: #f3f4f6;
+    --subtle: #c7cdd8;
+    --line: #1e293b;
+    --accent: #3b82f6;
+    --accent-soft: #1e293b;
+}
+
+/* GLOBAL */
+body {
+    margin: 0;
+    background: var(--bg);
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    transition: background .3s ease, color .3s ease;
+}
+
+.app {
+    max-width: 480px;
+    margin: auto;
+    min-height: 100vh;
+    background: var(--bg);
+    position: relative;
+    border-left: 1px solid var(--line);
+    border-right: 1px solid var(--line);
+    transition: .3s ease;
+}
+
+/* HEADER BAR */
+.header {
+    padding: 18px 20px;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.header h1 {
+    font-size: 22px;
+    margin: 0;
+}
+
+/* DARK MODE TOGGLE BUTTON */
+.toggle {
+    width: 44px;
+    height: 22px;
+    border-radius: 22px;
+    background: var(--line);
+    position: relative;
+    cursor: pointer;
+    transition: .3s ease;
+}
+
+.toggle .dot {
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: .3s ease;
+}
+
+.dark .toggle {
+    background: #1e293b;
+}
+
+.dark .toggle .dot {
+    transform: translateX(22px);
+}
+
+/* PAGE SYSTEM */
+.page {
+    display: none;
+    padding: 20px;
+    animation: slide .3s ease;
+}
+
+.active {
+    display: block;
+}
+
+@keyframes slide {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* COMPRESSED UI */
+.grid {
+    display: grid;
+    gap: 14px;
+}
+
+.card {
+    padding: 18px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: .25s;
+}
+
+.card:hover {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.card p {
+    margin: 0;
+    color: var(--subtle);
+    font-size: 14px;
+}
+
+/* TOOL BOX */
+.tool-box {
+    padding: 22px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--bg);
+}
+
+/* INPUT + BUTTON */
+input, button {
+    width: 90%;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--text);
+}
+
+button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    transition: .25s;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 480px;
+    width: 100%;
+    background: var(--bg);
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-around;
+    padding: 12px 0;
+    z-index: 100;
+}
+
+.bottom-nav div {
+    font-size: 13px;
+    color: var(--subtle);
+    cursor: pointer;
+}
+
+.bottom-nav div:hover {
+    color: var(--accent);
+}
+
+/* BACK BUTTON */
+.back-btn {
+    color: var(--accent);
+    font-size: 15px;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER WITH DARK MODE TOGGLE -->
+    <div class="header">
+        <h1>MinimalTools</h1>
+
+        <div class="toggle" onclick="toggleTheme()">
+            <div class="dot"></div>
+        </div>
+    </div>
+
+    <!-- HOME PAGE -->
+    <div id="home" class="page active">
+        <h2 style="margin-bottom:14px;">All Tools</h2>
+
+        <div class="grid">
+
+            <div class="card" onclick="showPage('qr')">
+                <h3>QR Code Generator</h3>
+                <p>Create QR codes instantly.</p>
+            </div>
+
+            <div class="card" onclick="showPage('compress')">
+                <h3>Image Compressor</h3>
+                <p>High-quality image shrinking.</p>
+            </div>
+
+            <div class="card" onclick="showPage('pdfjpg')">
+                <h3>PDF → JPG</h3>
+                <p>Convert PDF pages to JPG.</p>
+            </div>
+
+            <div class="card" onclick="showPage('jpgpdf')">
+                <h3>JPG → PDF</h3>
+                <p>Merge JPG files into PDF.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- QR PAGE -->
+    <div id="qr" class="page">
+        <div class="back-btn" onclick="showPage('home')">← Back</div>
+
+        <div class="tool-box">
+            <h2>QR Generator</h2>
+            <input type="text" id="qrText" placeholder="Enter text or URL">
+            <button onclick="generateQR()">Generate</button>
+            <div id="qrcode" style="margin-top:20px;"></div>
+        </div>
+    </div>
+
+    <!-- COMPRESSOR -->
+    <div id="compress" class="page">
+        <div class="back-btn" onclick="showPage('home')">← Back</div>
+
+        <div class="tool-box">
+            <h2>Image Compressor</h2>
+            <input type="file" id="inputImage" accept="image/*">
+            <button onclick="compressImage()">Compress</button>
+            <img id="outputImage" style="max-width:100%; margin-top:20px;">
+            <a id="downloadLink" style="display:none; margin-top:12px;" download="compressed.jpg">Download</a>
+        </div>
+    </div>
+
+    <!-- PDF → JPG -->
+    <div id="pdfjpg" class="page">
+        <div class="back-btn" onclick="showPage('home')">← Back</div>
+
+        <div class="tool-box">
+            <h2>PDF → JPG</h2>
+            <input type="file" id="pdfFile" accept="application/pdf">
+            <button onclick="convertPDF()">Convert</button>
+            <div id="pdfResult" style="margin-top:20px;"></div>
+        </div>
+    </div>
+
+    <!-- JPG → PDF -->
+    <div id="jpgpdf" class="page">
+        <div class="back-btn" onclick="showPage('home')">← Back</div>
+
+        <div class="tool-box">
+            <h2>JPG → PDF</h2>
+            <input type="file" id="images" accept="image/*" multiple>
+            <button onclick="convertToPDF()">Create PDF</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+    <div onclick="showPage('home')">Home</div>
+    <div onclick="showPage('qr')">QR</div>
+    <div onclick="showPage('compress')">Compress</div>
+    <div onclick="showPage('pdfjpg')">PDF→JPG</div>
+    <div onclick="showPage('jpgpdf')">JPG→PDF</div>
+</div>
+
+<!-- LIBRARIES -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+/* PAGE SWITCH */
+function showPage(page) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(page).classList.add('active');
+    window.scrollTo(0, 0);
+}
+
+/* THEME TOGGLE */
+function toggleTheme() {
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+}
+
+/* LOAD SAVED THEME */
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark");
+}
+
+/* QR */
+function generateQR(){
+    let text=document.getElementById("qrText").value;
+    if(!text) return alert("Enter text");
+    document.getElementById("qrcode").innerHTML="";
+    new QRCode(document.getElementById("qrcode"),{ text, width:180, height:180 });
+}
+
+/* IMAGE COMPRESS */
+function compressImage(){
+    let f=document.getElementById("inputImage").files[0];
+    if(!f) return alert("Select image");
+
+    let r=new FileReader();
+    r.onload=e=>{
+        let img=new Image();
+        img.src=e.target.result;
+
+        img.onload=()=>{
+            let c=document.createElement("canvas");
+            let x=c.getContext("2d");
+            c.width=img.width*0.5;
+            c.height=img.height*0.5;
+
+            x.drawImage(img,0,0,c.width,c.height);
+            let out=c.toDataURL("image/jpeg",0.7);
+
+            document.getElementById("outputImage").src=out;
+
+            let link=document.getElementById("downloadLink");
+            link.href=out;
+            link.style.display="block";
+        };
+    };
+    r.readAsDataURL(f);
+}
+
+/* PDF → JPG */
+function convertPDF(){
+    let file=document.getElementById("pdfFile").files[0];
+    if(!file) return alert("Select PDF");
+
+    document.getElementById("pdfResult").innerHTML="Processing...";
+
+    let r=new FileReader();
+    r.onload=function(){
+        let arr=new Uint8Array(this.result);
+        pdfjsLib.getDocument(arr).promise.then(pdf=>{
+            document.getElementById("pdfResult").innerHTML="";
+            for(let i=1;i<=pdf.numPages;i++){
+                pdf.getPage(i).then(page=>{
+                    let v=page.getViewport({scale:2});
+                    let c=document.createElement("canvas");
+                    let x=c.getContext("2d");
+
+                    c.width=v.width; c.height=v.height;
+
+                    page.render({canvasContext:x,viewport:v}).promise.then(()=>{
+                        let img=c.toDataURL("image/jpeg");
+
+                        let tag=document.createElement("img");
+                        tag.src=img;
+                        tag.style.maxWidth="100%";
+
+                        let link=document.createElement("a");
+                        link.href=img;
+                        link.download="page-"+i+".jpg";
+                        link.innerText="Download Page "+i;
+
+                        let result=document.getElementById("pdfResult");
+                        result.appendChild(tag);
+                        result.appendChild(link);
+                    });
+                });
+            }
+        });
+    };
+    r.readAsArrayBuffer(file);
+}
+
+/* JPG → PDF */
+async function convertToPDF(){
+    const { jsPDF }=window.jspdf;
+    let files=document.getElementById("images").files;
+    if(files.length===0) return alert("Select images");
+
+    let pdf=new jsPDF();
+
+    for(let i=0;i<files.length;i++){
+        let img=await toBase(files[i]);
+        let props=pdf.getImageProperties(img);
+
+        let w=pdf.internal.pageSize.getWidth();
+        let h=(props.height*w)/props.width;
+
+        if(i!==0) pdf.addPage();
+        pdf.addImage(img,"JPEG",0,0,w,h);
+    }
+
+    pdf.save("converted.pdf");
+}
+
+function toBase(file){
+    return new Promise(res=>{
+        let r=new FileReader();
+        r.onload=()=>res(r.result);
+        r.readAsDataURL(file);
+    });
+}
+</script>
+
+</body>
+</html>
